@@ -225,6 +225,7 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
+        margin-bottom: 20px;
       }
 
       .metric-card {
@@ -268,6 +269,7 @@
         border: 1px solid var(--glass-border);
         border-radius: 20px;
         box-shadow: var(--glass-shadow);
+        margin-bottom: 20px;
       }
 
       .comfort-title {
@@ -458,11 +460,38 @@
       }
 
       /* 手機版適應性調整 */
+      /* 手機版適應性調整 (最終垂直間距放大) */
       @media (max-width: 899px) {
         .main-wrapper {
-          padding: 20px;
-          padding-top: 20px;
+          padding: 30px 20px 40px;
           min-height: auto;
+        }
+
+        /* ------------------------------------- */
+        /* === 左欄 (日期 & 倉鼠) 優化 - 維持上次調整 === */
+        /* ------------------------------------- */
+
+        .date-info h1 {
+          font-size: 5rem;
+          margin-bottom: 2px;
+        }
+
+        .date-info #currentMonth {
+          font-size: 0.85rem;
+          margin-bottom: 2px;
+        }
+        .date-info #currentDay {
+          font-size: 0.95rem;
+          margin-bottom: 10px;
+        }
+
+        .date-info #currentTime {
+          font-size: 1.6rem;
+          margin-bottom: 15px;
+        }
+
+        .location-pill {
+          margin-bottom: 25px;
         }
 
         .hamster-area {
@@ -470,15 +499,18 @@
           flex-direction: column;
           align-items: center;
           text-align: center;
+          margin-top: 20px;
+          margin-bottom: 30px;
         }
         .hamster-image {
-          width: 120px;
-          height: 120px;
-          font-size: 100px;
+          width: 110px;
+          height: 110px;
+          font-size: 90px;
         }
         .speech-bubble {
           max-width: 100%;
-          margin-top: 15px;
+          margin-top: 20px;
+          font-size: 0.95rem;
         }
         .speech-bubble::before {
           left: 50%;
@@ -486,64 +518,74 @@
           top: -15px;
           transform: translateX(-50%) rotate(210deg);
         }
-        .date-info h1 {
-          font-size: 5rem;
+
+        /* ------------------------------------- */
+        /* === 右欄卡片間距 優化 (重點調整) === */
+        /* ------------------------------------- */
+
+        .right-col {
+          gap: 35px; /* ***核心調整：加大主要卡片間距，從 30px 增加到 35px*** */
         }
 
-        /* 手機版的預報卡片改成垂直佈局 */
-        .mini-card {
-          display: flex;
-          flex-direction: column;
-          padding: 15px 18px;
-          text-align: center;
-          gap: 10px;
-        }
-
-        .mini-left {
-          order: 1;
-        }
-
-        .mini-icon {
-          order: 2;
-          font-size: 2.4rem;
-          margin: 5px 0;
-        }
-
-        .mini-right {
-          order: 3;
-          flex-direction: row;
-          justify-content: center;
-          gap: 15px;
-        }
-
-        .mini-temp {
-          font-size: 1.6rem;
-        }
-
-        /* 手機板的未來預報卡片網格 */
-        .scroll-container {
-          grid-template-columns: 1fr;
-        }
-
+        /* Metric Grid */
         .metric-grid {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 15px;
         }
-
+        .metric-grid .metric-card:last-child {
+          grid-column: 1 / 3;
+        }
         .metric-card {
-          padding: 20px 8px;
+          padding: 18px 10px;
         }
-
         .metric-value {
-          font-size: 1.8rem;
-        }
-
-        .metric-icon {
           font-size: 2rem;
         }
-
+        .metric-icon {
+          font-size: 2.2rem;
+        }
         .metric-label {
           font-size: 0.75rem;
+        }
+
+        /* 舒適度指標 (Comfort Card) - 稍微縮小內邊距以節省空間 */
+        .comfort-card {
+          padding: 15px 20px; /* 縮小上下邊距 */
+        }
+        .comfort-title {
+          margin-bottom: 8px; /* 稍微縮小標題與 bar 的間距 */
+        }
+
+        /* 預報卡片 (Forecast Card) */
+        .forecast-card {
+          padding: 20px;
+        }
+        .scroll-container {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        /* 預報迷你卡片 */
+        .mini-card {
+          padding: 18px 20px;
+          text-align: left;
+        }
+        .mini-icon {
+          font-size: 2.4rem;
+          margin: 0 10px;
+        }
+
+        /* 倉鼠警告區塊 (Hamster Warning) */
+        .hamster-warning-card {
+          padding: 20px;
+        }
+
+        .warning-title {
+          margin-bottom: 12px;
+        }
+        .warning-list li {
+          font-size: 0.95rem;
+          margin-bottom: 8px;
         }
       }
     </style>
