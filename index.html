@@ -26,7 +26,7 @@
         --danger-color: #e74c3c; /* 紅色危險 */
 
         /* 毛玻璃設定 */
-        --glass-bg: rgba(255, 255, 255, 0.15);
+        --glass-bg: rgb(255 255 255 / 25%);
         --glass-border: rgba(255, 255, 255, 0.3);
         --glass-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.2);
 
@@ -310,7 +310,7 @@
       /* 預報區塊 */
       .forecast-card {
         padding: 20px;
-        background: var(--glass-bg);
+        background: rgb(255 255 255 / 25%);
         backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border);
         border-radius: 20px;
@@ -421,7 +421,7 @@
       }
 
       .hamster-warning-card {
-        background: var(--glass-bg);
+        background: rgb(255 255 255 / 25%);
         backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border);
         border-radius: 20px;
@@ -430,7 +430,7 @@
       }
 
       .warning-title {
-        color: var(--danger-color);
+        color: #f2ff14;
         font-size: 1.1rem;
         font-weight: 900;
         margin-bottom: 10px;
@@ -459,6 +459,12 @@
 
       /* 手機版適應性調整 */
       @media (max-width: 899px) {
+        .main-wrapper {
+          padding: 20px;
+          padding-top: 20px;
+          min-height: auto;
+        }
+
         .hamster-area {
           justify-content: center;
           flex-direction: column;
@@ -483,9 +489,61 @@
         .date-info h1 {
           font-size: 5rem;
         }
-        /* 手機板的未來預報卡片也是 50% 佈局 */
+
+        /* 手機版的預報卡片改成垂直佈局 */
+        .mini-card {
+          display: flex;
+          flex-direction: column;
+          padding: 15px 18px;
+          text-align: center;
+          gap: 10px;
+        }
+
+        .mini-left {
+          order: 1;
+        }
+
+        .mini-icon {
+          order: 2;
+          font-size: 2.4rem;
+          margin: 5px 0;
+        }
+
+        .mini-right {
+          order: 3;
+          flex-direction: row;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        .mini-temp {
+          font-size: 1.6rem;
+        }
+
+        /* 手機板的未來預報卡片網格 */
         .scroll-container {
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 1fr;
+        }
+
+        .metric-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+        }
+
+        .metric-card {
+          padding: 20px 8px;
+        }
+
+        .metric-value {
+          font-size: 1.8rem;
+        }
+
+        .metric-icon {
+          font-size: 2rem;
+        }
+
+        .metric-label {
+          font-size: 0.75rem;
         }
       }
     </style>
@@ -594,7 +652,7 @@
 
       // 倉鼠建議的溫度和濕度臨界值
       const HAMSTER_CRITICAL_HOT = 26;
-      const HAMSTER_CRITICAL_COLD = 18;
+      const HAMSTER_CRITICAL_COLD = 22;
       const HAMSTER_CRITICAL_HUMID = 70;
       const HAMSTER_CRITICAL_DRY = 35;
 
@@ -613,12 +671,12 @@
           return `🔥 主人！現在 ${currentTemp}°C，好熱喔！我快要熱暈了！請幫我開冷氣！`;
         }
         if (currentTemp < HAMSTER_CRITICAL_COLD) {
-          return `🥶 主人，現在只有 ${currentTemp}°C... 我感覺要進入假冬眠了，快幫我加暖氣！`;
+          return `🥶 主人，現在只有 ${currentTemp}°C... 我感覺好冷，快幫我加暖氣！`;
         }
         if (humidity > HAMSTER_CRITICAL_HUMID) {
           return `💧 主人，濕度 ${humidity}%！我的墊材要發霉了... 趕快啟動除濕機！`;
         }
-        if (currentTemp >= 20 && currentTemp <= 25) {
+        if (currentTemp >= 22 && currentTemp <= 25) {
           return `💖 主人，${currentTemp}°C 好舒服，讓我再吃幾顆點心吧！扭扭～`;
         }
         return `🌤️ 主人，天氣不錯喔！別忘了幫我換新鮮的飲用水。`;
@@ -635,10 +693,18 @@
           adviceList.push("🚨 立刻降溫！ 開啟冷氣或風扇，並放置降溫石。");
           adviceList.push("💦 確認水瓶水量，並提供新鮮飲用水。");
         } else if (minTemp < HAMSTER_CRITICAL_COLD) {
-          title = "極度危險！ 溫度過低倉鼠可能假性冬眠。";
+          title = "極度危險！ 溫度過低倉鼠可能會失溫。";
           isDanger = true;
           adviceList.push("🔥 立刻保暖！ 檢查保暖墊是否開啟、墊材是否足夠。");
           adviceList.push("🌡️ 建議將籠子移至無風口、溫度更穩定的室內深處。");
+        } else if (maxTemp < 22) {
+          title = "溫度偏低！ 需要加強保暖措施。";
+          isDanger = true;
+          adviceList.push(
+            "🔥 檢查保暖墊是否運作正常，確保溫度保持在舒適範圍。"
+          );
+          adviceList.push("🧸 增加墊材厚度，為倉鼠提供更好的保暖。");
+          adviceList.push("🏠 將籠子移至無風口的溫暖位置。");
         }
 
         if (humidity > HAMSTER_CRITICAL_HUMID) {
@@ -667,9 +733,26 @@
       }
 
       function getComfortMarkerPosition(temp) {
-        const minRange = 10;
-        const maxRange = 35;
-        let position = ((temp - minRange) / (maxRange - minRange)) * 100;
+        // 倉鼠舒適範圍標準
+        // 冷: 0-16°C
+        // 涼: 16-22°C
+        // 適: 22-25°C (最舒適)
+        // 溫: 25-28°C
+        // 熱: 28°C+
+
+        let position;
+        if (temp <= 16) {
+          position = (temp / 16) * 20; // 0-16°C -> 0-20%
+        } else if (temp <= 22) {
+          position = 20 + ((temp - 16) / 6) * 20; // 16-22°C -> 20-40%
+        } else if (temp <= 25) {
+          position = 40 + ((temp - 22) / 3) * 20; // 22-25°C -> 40-60%
+        } else if (temp <= 28) {
+          position = 60 + ((temp - 25) / 3) * 20; // 25-28°C -> 60-80%
+        } else {
+          position = 80 + ((temp - 28) / 7) * 20; // 28-35°C -> 80-100%
+        }
+
         position = Math.max(0, Math.min(100, position));
         return position;
       }
@@ -782,7 +865,7 @@
         // 渲染警告卡片
         document.getElementById("hamsterWarning").innerHTML = `
             <div class="hamster-warning-card">
-                <div class="warning-title" style="color: ${warningColor};">
+                <div class="warning-title" >
                     <span>${warningIcon}</span> ${titleText}
                 </div>
                 ${
